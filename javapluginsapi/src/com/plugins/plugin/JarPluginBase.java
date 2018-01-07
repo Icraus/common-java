@@ -7,9 +7,14 @@ package com.plugins.plugin;
 
 import java.util.Properties;
 
-
+/**
+ * a wrapper class for jar based files plugins
+ * 
+ * @author Mohamed khaled(icraus)
+ * @version 1.1
+ */
 public class JarPluginBase implements PluginIFace {
-
+    private PluginIFace plugin;
     public static String CLASSNAME_PROPERTY = "className";
     
     public static String INTERFACENAME_PROPERTY = "interfaceName";
@@ -19,14 +24,14 @@ public class JarPluginBase implements PluginIFace {
     
     private String className;
     private String interfaceName;
-    
-    public JarPluginBase() {
-        pluginMetaData = new Properties();
+    public JarPluginBase(PluginIFace plug){
+        setPlugin(plug);
     }
-   private void loadMetaData(){
-        setClassName(pluginMetaData.getProperty("className"));
-        setInterfaceName(pluginMetaData.getProperty("interfaceName"));
-
+    public JarPluginBase() {
+    }
+   private void loadMetaData() {
+        setClassName(getPluginMetaData().getProperty(CLASSNAME_PROPERTY));
+        setInterfaceName(getPluginMetaData().getProperty(INTERFACENAME_PROPERTY));
    }
 /**
      * <h2>provides meta data about the plugin </h2>
@@ -53,7 +58,7 @@ public class JarPluginBase implements PluginIFace {
         return className;
     }
 
-    public void setClassName(String className) {
+    protected void setClassName(String className) {
         this.className = className;
     }
 
@@ -61,7 +66,15 @@ public class JarPluginBase implements PluginIFace {
         return interfaceName;
     }
 
-    public void setInterfaceName(String interfaceName) {
+    protected void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
+    }
+
+    public PluginIFace getPlugin() {
+        return plugin;
+    }
+
+    protected void setPlugin(PluginIFace plugin) {
+        this.plugin = plugin;
     }
 }

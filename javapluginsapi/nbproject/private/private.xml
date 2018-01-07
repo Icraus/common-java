@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="Graduation_Project"/>
+        <group name="Graduation_Project">
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/plugin/JarPluginBase.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/exception/PluginNotFoundException.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/pluginloader/JarPluginLoader.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/plugin/PluginIFace.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/exception/PluginProperiesNotFound.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/JavaPluginsApi/src/com/plugins/pluginloader/PluginLoaderIFace.java</file>
+            <file>file:/F:/Important/Code/Graduation_Project/java-tools/common-java/javapluginsapi/test/com/plugins/pluginloader/JarPluginLoaderTest.java</file>
+        </group>
     </open-files>
 </project-private>

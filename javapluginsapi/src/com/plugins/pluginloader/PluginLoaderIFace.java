@@ -29,4 +29,5 @@ public interface PluginLoaderIFace {
      * @throws com.plugins.exception.PluginErrorLoadingException
      */
     public PluginIFace loadPlugin(String filePath)throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException;
+    
 }
