@@ -10,10 +10,8 @@ import com.plugins.exception.PluginErrorLoadingException;
 import com.plugins.exception.PluginNotFoundException;
 import com.plugins.exception.PluginProperiesNotFound;
 import com.plugins.plugin.JarPluginBase;
-import com.plugins.plugin.PluginIFace;
 import java.io.File;
 import java.net.URL;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -49,6 +47,8 @@ public class JarPluginLoaderTest {
     
     @After
     public void tearDown() {
+//        JarPluginLoader.PLUGIN_METADATA_FILE = "PluginMetadata.properties";
+        
     }
     @Test
     public void testFileExists(){
@@ -56,25 +56,25 @@ public class JarPluginLoaderTest {
     }
     @Test
     public void testLoader(){
+        JarPluginLoader.PLUGIN_METADATA_FILE = "PluginMetadata.properties";
         PluginLoaderIFace loader = new JarPluginLoader();
         try {
-            TestInterface plugin = (TestInterface)loader.loadPlugin(fileName);
+//            loader.initPluginLoader(fileName);
+            JarPluginBase pl = (JarPluginBase) loader.loadPlugin(fileName);
+            TestInterface plugin= (TestInterface) pl.getPlugin();
             assertNotEquals(plugin, null);
             plugin.run();
             System.out.println("Test Successfully");
-        } catch (PluginNotFoundException ex) {
+        } catch (PluginNotFoundException | PluginErrorLoadingException | PluginProperiesNotFound ex) {
             Logger.getLogger(JarPluginLoaderTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PluginProperiesNotFound ex) {
-            Logger.getLogger(JarPluginLoaderTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PluginErrorLoadingException ex) {
-            Logger.getLogger(JarPluginLoaderTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Exception was thrown");
         }
     }
     
     @Test(expected = PluginNotFoundException.class)
     public void loaderThrowNotFoundExcption() throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException{
         PluginLoaderIFace loader = new JarPluginLoader();
-            TestInterface plugin = (TestInterface)loader.loadPlugin("Dumb Name");
+            TestInterface plugin = (TestInterface)((JarPluginBase)loader.loadPlugin("Dumb Name")).getPlugin();
             assertNotEquals(plugin, null);
             plugin.run();
     }
@@ -83,7 +83,7 @@ public class JarPluginLoaderTest {
     public void loaderThrowPropertyNotFoundExcption() throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException{
         PluginLoaderIFace loader = new JarPluginLoader();
         JarPluginLoader.PLUGIN_METADATA_FILE = "Hello World";
-        TestInterface plugin = (TestInterface)loader.loadPlugin(fileName);
+        TestInterface plugin = (TestInterface)((JarPluginBase)loader.loadPlugin(fileName)).getPlugin();
         assertNotEquals(plugin, null);
         plugin.run();
     }
@@ -95,4 +95,8 @@ public class JarPluginLoaderTest {
         assertNotEquals(plugin, null);
         plugin.run();
     }*/
+    @Test
+    public void testLoaderInterface(){
+        
+    }
 }

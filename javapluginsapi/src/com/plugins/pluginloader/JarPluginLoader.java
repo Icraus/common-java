@@ -23,9 +23,9 @@ import java.util.Properties;
  * <h2>Used to load Plugins from jar files</h2>
  * it uses a class loader and read class From jar files specified in a property called className
  * and found in JarPluginLoader.PLUGIN_METADATA_FILE
- * clients of this loader should implements the JarPluginBase if you want to use PluginIFace interface you reimpelement the loadPlugin member 
+ * clients of this loader should implements the PluginIface 
  * @author Mohamed Khaled(icraus)
- * @version 1.0
+ * @version 1.1
  */
 public class JarPluginLoader implements PluginLoaderIFace {
     
@@ -33,10 +33,12 @@ public class JarPluginLoader implements PluginLoaderIFace {
      * <h2>The Default Plugin Meta data file which must exists in all plugins Jar and of type <b>.properties</b></h2>
      */
     public static String PLUGIN_METADATA_FILE = "PluginMetadata.properties";
-        public static String PLUGIN_PACKAGE_PROPERTY = "PLUGIN_META_INF";
+    public static String PLUGIN_PACKAGE_PROPERTY = "PLUGIN_META_INF";
+    private final String PLUGIN_PROPERTIES_PATH = PLUGIN_PACKAGE_PROPERTY + "/" + PLUGIN_METADATA_FILE;
 
     private String filePath;
     private ClassLoader loader;
+    private Properties prop;
     public JarPluginLoader() {
     }
 
@@ -65,8 +67,8 @@ public class JarPluginLoader implements PluginLoaderIFace {
      * @throws PluginProperiesNotFound 
      */
     protected Properties loadProperties() throws PluginProperiesNotFound{
-        Properties prop = new Properties();
-        try (InputStream streamProp = getLoader().getResourceAsStream(PLUGIN_PACKAGE_PROPERTY + "/" + PLUGIN_METADATA_FILE)){
+        prop = new Properties();
+        try (InputStream streamProp = getLoader().getResourceAsStream(PLUGIN_PROPERTIES_PATH)){
             
             prop.load(streamProp);
             return prop;     
@@ -84,13 +86,20 @@ public class JarPluginLoader implements PluginLoaderIFace {
      */
     protected JarPluginBase loadPluginHelper(String className) throws PluginNotFoundException, PluginErrorLoadingException { 
         try {
-            JarPluginBase plugin = (JarPluginBase) Class.forName(className, true, getLoader()).newInstance();
+            JarPluginBase plugin = new JarPluginBase((PluginIFace) Class.forName(className, true, getLoader()).newInstance());
             return plugin;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new PluginNotFoundException("Can't Find Plugin, Error Class Name" + ex.getMessage());
         }catch(ClassCastException ex){
             throw new PluginErrorLoadingException(); 
         }
+    }
+    protected void initPluginLoader(String _filePath) throws PluginNotFoundException, PluginProperiesNotFound{
+        setFilePath(_filePath);
+        ClassLoader _load = initClassLoader();
+        setLoader(_load);
+        loadProperties();
+        
     }
     /**
      * 
@@ -100,12 +109,10 @@ public class JarPluginLoader implements PluginLoaderIFace {
      * @throws PluginErrorLoadingException
      * @throws PluginProperiesNotFound 
      */
+    
     @Override
     public PluginIFace loadPlugin(String _filePath) throws PluginNotFoundException, PluginErrorLoadingException, PluginProperiesNotFound {
-        setFilePath(_filePath);
-        ClassLoader _load = initClassLoader();
-        setLoader(_load);
-        Properties prop = loadProperties();
+        initPluginLoader(_filePath);
         String className = prop.getProperty(JarPluginBase.CLASSNAME_PROPERTY);
         JarPluginBase plugin = loadPluginHelper(className);
         plugin.setPluginMetaData(prop);
@@ -115,7 +122,7 @@ public class JarPluginLoader implements PluginLoaderIFace {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    protected void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
@@ -123,7 +130,7 @@ public class JarPluginLoader implements PluginLoaderIFace {
         return loader;
     }
 
-    public void setLoader(ClassLoader loader) {
+    protected void setLoader(ClassLoader loader) {
         this.loader = loader;
     }
 
