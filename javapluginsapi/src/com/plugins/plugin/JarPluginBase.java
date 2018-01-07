@@ -13,8 +13,8 @@ import java.util.Properties;
  * @author Mohamed khaled(icraus)
  * @version 1.1
  */
-public class JarPluginBase implements PluginIFace {
-    private PluginIFace plugin;
+public class JarPluginBase implements Plugin {
+    private Plugin plugin;
     public static String CLASSNAME_PROPERTY = "className";
     
     public static String INTERFACENAME_PROPERTY = "interfaceName";
@@ -24,7 +24,7 @@ public class JarPluginBase implements PluginIFace {
     
     private String className;
     private String interfaceName;
-    public JarPluginBase(PluginIFace plug){
+    public JarPluginBase(Plugin plug){
         setPlugin(plug);
     }
     public JarPluginBase() {
@@ -70,11 +70,11 @@ public class JarPluginBase implements PluginIFace {
         this.interfaceName = interfaceName;
     }
 
-    public PluginIFace getPlugin() {
+    public Plugin getPlugin() {
         return plugin;
     }
 
-    protected void setPlugin(PluginIFace plugin) {
+    protected void setPlugin(Plugin plugin) {
         this.plugin = plugin;
     }
 }

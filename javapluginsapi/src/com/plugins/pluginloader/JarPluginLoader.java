@@ -6,7 +6,6 @@
 package com.plugins.pluginloader;
 
 import com.plugins.exception.PluginErrorLoadingException;
-import com.plugins.plugin.PluginIFace;
 import com.plugins.plugin.JarPluginBase;
 import com.plugins.exception.PluginNotFoundException;
 import com.plugins.exception.PluginProperiesNotFound;
@@ -17,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
+import com.plugins.plugin.Plugin;
 //TODO 1.add Plugin Manager
 
 /**
@@ -27,15 +27,23 @@ import java.util.Properties;
  * @author Mohamed Khaled(icraus)
  * @version 1.1
  */
-public class JarPluginLoader implements PluginLoaderIFace {
+public class JarPluginLoader implements PluginLoader {
     
     /**
      * <h2>The Default Plugin Meta data file which must exists in all plugins Jar and of type <b>.properties</b></h2>
      */
     public static String PLUGIN_METADATA_FILE = "PluginMetadata.properties";
     public static String PLUGIN_PACKAGE_PROPERTY = "PLUGIN_META_INF";
-    private final String PLUGIN_PROPERTIES_PATH = PLUGIN_PACKAGE_PROPERTY + "/" + PLUGIN_METADATA_FILE;
+    public static String PLUGIN_PROPERTIES_PATH = PLUGIN_PACKAGE_PROPERTY + "/" + PLUGIN_METADATA_FILE;
+    private JarPluginBase metaPlugin;
 
+    public JarPluginBase getMetaPlugin() {
+        return metaPlugin;
+    }
+
+    protected void setMetaPlugin(JarPluginBase metaPlugin) {
+        this.metaPlugin = metaPlugin;
+    }
     private String filePath;
     private ClassLoader loader;
     private Properties prop;
@@ -53,7 +61,9 @@ public class JarPluginLoader implements PluginLoaderIFace {
             File file = new File(getFilePath());
             if(!file.exists())
                 throw new MalformedURLException();
+//TODO add resource from web support 
             URL jarPath = file.toURI().toURL();
+//            URL jarPath = new URL(getFilePath());
             ClassLoader _load =  new URLClassLoader(new URL[]{jarPath});
             return _load;
         } catch (MalformedURLException ex) {
@@ -68,9 +78,11 @@ public class JarPluginLoader implements PluginLoaderIFace {
      */
     protected Properties loadProperties() throws PluginProperiesNotFound{
         prop = new Properties();
-        try (InputStream streamProp = getLoader().getResourceAsStream(PLUGIN_PROPERTIES_PATH)){
-            
-            prop.load(streamProp);
+        try (InputStream stream = ((URLClassLoader)getLoader()).findResource(PLUGIN_PROPERTIES_PATH).openStream()){
+            prop.load(stream);
+            String str = prop.getProperty("className");
+            if(str == null || str.isEmpty())
+                throw new NullPointerException();
             return prop;     
         } catch (IOException | NullPointerException ex) {
             throw new PluginProperiesNotFound("Error Loading Properties");
@@ -84,9 +96,9 @@ public class JarPluginLoader implements PluginLoaderIFace {
      * @throws PluginNotFoundException
      * @throws PluginErrorLoadingException
      */
-    protected JarPluginBase loadPluginHelper(String className) throws PluginNotFoundException, PluginErrorLoadingException { 
+    protected Plugin loadPluginHelper(String className) throws PluginNotFoundException, PluginErrorLoadingException { 
         try {
-            JarPluginBase plugin = new JarPluginBase((PluginIFace) Class.forName(className, true, getLoader()).newInstance());
+            Plugin plugin = (Plugin) Class.forName(className, true, getLoader()).newInstance();
             return plugin;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new PluginNotFoundException("Can't Find Plugin, Error Class Name" + ex.getMessage());
@@ -100,6 +112,7 @@ public class JarPluginLoader implements PluginLoaderIFace {
         setLoader(_load);
         loadProperties();
         
+        
     }
     /**
      * 
@@ -111,13 +124,15 @@ public class JarPluginLoader implements PluginLoaderIFace {
      */
     
     @Override
-    public PluginIFace loadPlugin(String _filePath) throws PluginNotFoundException, PluginErrorLoadingException, PluginProperiesNotFound {
+    public Plugin loadPlugin(String _filePath) throws PluginNotFoundException, PluginErrorLoadingException, PluginProperiesNotFound {
         initPluginLoader(_filePath);
         String className = prop.getProperty(JarPluginBase.CLASSNAME_PROPERTY);
-        JarPluginBase plugin = loadPluginHelper(className);
-        plugin.setPluginMetaData(prop);
+        Plugin plugin = loadPluginHelper(className);
+        setMetaPlugin(new JarPluginBase(plugin));
+        getMetaPlugin().setPluginMetaData(prop);
         return plugin;
     }
+    
      public String getFilePath() {
         return filePath;
     }

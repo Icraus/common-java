@@ -18,6 +18,6 @@ package com.plugins.plugin;
  * @version 1.0
  * 
  */
-public interface PluginIFace  {
+public interface Plugin  {
     
 }

@@ -6,9 +6,9 @@
 package com.plugins.pluginloader;
 
 import com.plugins.exception.PluginErrorLoadingException;
-import com.plugins.plugin.PluginIFace;
 import com.plugins.exception.PluginNotFoundException;
 import com.plugins.exception.PluginProperiesNotFound;
+import com.plugins.plugin.Plugin;
 /**
  * <h1>load the plugin from a file</h1>
  * <p> 
@@ -18,7 +18,7 @@ import com.plugins.exception.PluginProperiesNotFound;
  * 
  * @author Mohamed khaled(icraus)
  */
-public interface PluginLoaderIFace {
+public interface PluginLoader {
     
     /**
      *
@@ -28,6 +28,6 @@ public interface PluginLoaderIFace {
      * @throws com.plugins.exception.PluginProperiesNotFound
      * @throws com.plugins.exception.PluginErrorLoadingException
      */
-    public PluginIFace loadPlugin(String filePath)throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException;
+    public Plugin loadPlugin(String filePath)throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException;
     
 }
