@@ -1,4 +1,4 @@
-#Common Tools and libraries used in java development
+# Common Tools and libraries used in java development
 
-###Java Plugins api
-a library used to develop plugin-based applications
+### Java Plugins api
+##### a library used to develop plugin-based applications
