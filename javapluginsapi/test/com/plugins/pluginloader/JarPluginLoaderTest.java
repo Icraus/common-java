@@ -21,14 +21,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 
 /**
  *
  * @author Mohamed Khaled(icraus)
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JarPluginLoaderTest {
     
     public JarPluginLoaderTest() {
@@ -67,7 +64,7 @@ public class JarPluginLoaderTest {
 
             TestInterface plugin= (TestInterface)  loader.loadPlugin(fileName);
             
-            assertNotEquals(plugin, null);
+            assertNotNull(plugin);
             plugin.run();
             System.out.println("Test Succeed");
         } catch (PluginNotFoundException | PluginErrorLoadingException | PluginProperiesNotFound ex) {
@@ -80,7 +77,8 @@ public class JarPluginLoaderTest {
     public void loaderThrowNotFoundExcption() throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException{
         PluginLoader loader = new JarPluginLoader();
             TestInterface plugin = (TestInterface)loader.loadPlugin("Dumb Name");
-            assertNotEquals(plugin, null);
+            assertNotSame(plugin, this);
+            assertNotNull(plugin);
             plugin.run();
     }
     
@@ -88,7 +86,7 @@ public class JarPluginLoaderTest {
     public void loaderThrowPropertyNotFoundExcption() throws PluginNotFoundException, PluginProperiesNotFound, PluginErrorLoadingException{
         PluginLoader loader = new JarPluginLoader();
         TestInterface plugin = (TestInterface)loader.loadPlugin(fileName);
-        assertNotEquals(plugin, null);
+            assertNotNull(plugin);
         plugin.run();
     }
     /* TODO add Test For Error Loading
@@ -104,13 +102,13 @@ public class JarPluginLoaderTest {
         try {
             JarPluginLoader loader = new JarPluginLoader();
             TestInterface plugin = (TestInterface)loader.loadPlugin(fileName);
-            assertNotEquals(plugin, null);
+            assertNotNull(plugin);
             JarPluginBase metaPlugin = loader.getMetaPlugin();
             Plugin plugin1 = metaPlugin.getPlugin();
-            assertNotEquals(plugin1, null);
+            assertNotNull(plugin);
             TestInterface t = (TestInterface)plugin1;
             t.run();
-            assertNotEquals(t , null);
+            assertNotNull(plugin);
             System.out.println("Success");
         } catch (PluginNotFoundException ex) {
             Logger.getLogger(JarPluginLoaderTest.class.getName()).log(Level.SEVERE, null, ex);
