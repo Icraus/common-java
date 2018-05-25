@@ -17,6 +17,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 import com.plugins.plugin.Plugin;
+import com.plugins.plugin.PluginList;
 //TODO 1.add Plugin Manager
 
 /**
@@ -98,13 +99,29 @@ public class JarPluginLoader implements PluginLoader {
      */
     protected Plugin loadPluginHelper(String className) throws PluginNotFoundException, PluginErrorLoadingException { 
         try {
-            Plugin plugin = (Plugin) Class.forName(className, true, getLoader()).newInstance();
-            return plugin;
+            if(className.startsWith("[") && className.endsWith("]")){
+                PluginList lst = new PluginList();
+                String[] split = className.split(",");
+                for(String s : split){
+                    String trimd = s.trim();
+                    Plugin plugin = loadSinglePlugin(trimd);
+                    lst.add(plugin);
+                }
+                return lst;
+            }else {
+                
+                return loadSinglePlugin(className);
+            }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new PluginNotFoundException("Can't Find Plugin, Error Class Name" + ex.getMessage());
         }catch(ClassCastException ex){
             throw new PluginErrorLoadingException(); 
         }
+    }
+
+    protected Plugin loadSinglePlugin(String className) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+        Plugin plugin = (Plugin) Class.forName(className, true, getLoader()).newInstance();
+        return plugin;
     }
     protected void initPluginLoader(String _filePath) throws PluginNotFoundException, PluginProperiesNotFound{
         setFilePath(_filePath);

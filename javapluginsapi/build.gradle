@@ -35,3 +35,11 @@ dependencies{
 
 }
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+uploadArchives {
+    repositories{
+        flatDir {
+            dirs System.getenv("JAVA_LOCAL_REPO")
+        }
+    }
+}
