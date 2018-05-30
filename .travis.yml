@@ -1,3 +1,2 @@
 language: java
-sudo: enabled
 script: ./testscript.sh
