@@ -1,2 +1,1 @@
-# java plugins api docs
-<a href="javapluginapi/index.html"> docs are here</a>
+<a href="javapluginsapi/index.html"> java plugins docs</a>

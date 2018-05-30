@@ -20,14 +20,14 @@ sourceSets{
             includes = ["**/*.properties"]
         }
     }
-	test {
-      java {
-        srcDirs = ['test']
-      }
-      resources {
-        srcDirs = ['test']
-      }
-}
+    test {
+        java {
+            srcDirs = ['test']
+        }
+        resources {
+            srcDirs = ['test']
+        }
+    }
 }
 dependencies{
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -36,10 +36,17 @@ dependencies{
 }
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-uploadArchives {
-    repositories{
-        flatDir {
-            dirs System.getenv("JAVA_LOCAL_REPO")
+apply plugin: 'maven-publish'
+
+publishing {
+    
+    publications {
+        mavenJava(MavenPublication) {
+            version '1.2'
+            groupId 'icraus.utils'
+            artifactId 'javapluginsapi'
+            from components.java
+            
         }
     }
 }
