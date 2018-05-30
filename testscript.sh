@@ -1,1 +1,0 @@
-./javapluginsapi/gradle test
