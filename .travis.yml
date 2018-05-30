@@ -1,5 +1,4 @@
 language: java
 
 script: 
-  cd javapluginsapi;
-  gradle test;
+  javapluginsapi/gradle test
