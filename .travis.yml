@@ -7,4 +7,4 @@ cache:
   - $HOME/.gradle
 script: 
 -cd javapluginsapi
--sudo ./gradlew
+-./gradlew
