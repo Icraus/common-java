@@ -8,3 +8,4 @@ cache:
 script: 
   cd javapluginsapi
   ./gradlew
+  gradle test
