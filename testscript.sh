@@ -1,2 +1,2 @@
 cd javapluginsapi
-gradle -q test
+gradlew -q test
