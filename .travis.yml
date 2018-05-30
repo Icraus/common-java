@@ -1,11 +1,5 @@
 language: java
-jdk:
-- oraclejdk8
-cache:
-  directories:
-  - $HOME/.m2
-  - $HOME/.gradle
+
 script: 
-  cd javapluginsapi
-  ./gradlew
-  gradle test
+  cd javapluginsapi;
+  gradle test;
